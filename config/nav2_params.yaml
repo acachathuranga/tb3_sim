@@ -97,55 +97,58 @@ controller_server:
 
     FollowPath:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
-      primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      angular_dist_threshold: 0.1
+      primary_controller: "dwb_core::DWBLocalPlanner" # "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      angular_dist_threshold: 0.68
       forward_sampling_distance: 0.5
-      rotate_to_heading_angular_vel: 1.8
+      rotate_to_heading_angular_vel: 2.5
       max_angular_accel: 40.0
       simulate_ahead_time: 1.0
 
-    # # DWB parameters
+   # # DWB parameters
     # FollowPath:
     #   plugin: "dwb_core::DWBLocalPlanner"
-    #   debug_trajectory_details: True
-    #   min_vel_x: 0.0 #0.0
-    #   min_vel_y: 0.0
-    #   max_vel_x: 0.4 #0.26
-    #   max_vel_y: 0.0
-    #   max_vel_theta: 3.0 #1.0
-    #   min_speed_xy: 0.0 #0.0
-    #   max_speed_xy: 0.4 #0.26
-    #   min_speed_theta: 2.0 #0.0
-    #   # Add high threshold velocity for turtlebot 3 issue.
-    #   # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
-    #   acc_lim_x: 2.5
-    #   acc_lim_y: 0.0
-    #   acc_lim_theta: 3.2
-    #   decel_lim_x: -2.5
-    #   decel_lim_y: 0.0
-    #   decel_lim_theta: -3.2
-    #   vx_samples: 20
-    #   vy_samples: 5
-    #   vtheta_samples: 20
-    #   sim_time: 1.5 #1.0 #1.7
-    #   linear_granularity: 0.05
-    #   angular_granularity: 0.025
-    #   transform_tolerance: 0.2
-    #   xy_goal_tolerance: 0.25
-    #   trans_stopped_velocity: 0.25
-    #   short_circuit_trajectory_evaluation: True
-    #   stateful: True
-    #   critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-    #   BaseObstacle.scale: 0.02
-    #   PathAlign.scale: 32.0
-    #   PathAlign.forward_point_distance: 0.1
-    #   GoalAlign.scale: 24.0
-    #   GoalAlign.forward_point_distance: 0.1
-    #   PathDist.scale: 100.0 #32.0
-    #   GoalDist.scale: 24.0
-    #   RotateToGoal.scale: 32.0
-    #   RotateToGoal.slowing_factor: 5.0
-    #   RotateToGoal.lookahead_time: -1.0
+
+      debug_trajectory_details: True
+      min_vel_x: 0.0 #0.0
+      min_vel_y: 0.0
+      max_vel_x: 0.4 #0.26
+      max_vel_y: 0.0
+      max_vel_theta: 3.0 #1.0
+      min_speed_xy: 0.0 #0.0
+      max_speed_xy: 0.7 #0.26
+      min_speed_theta: 2.0 #0.0
+      # Add high threshold velocity for turtlebot 3 issue.
+      # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
+      acc_lim_x: 2.5
+      acc_lim_y: 0.0
+      acc_lim_theta: 3.2 #40.0  #3.2
+      decel_lim_x: -2.5
+      decel_lim_y: 0.0
+      decel_lim_theta: -3.2 #-40.0 #-3.2
+      vx_samples: 20
+      vy_samples: 5
+      vtheta_samples: 20
+      sim_time: 1.5 #1.0 #1.7
+      linear_granularity: 0.05
+      angular_granularity: 0.025
+      transform_tolerance: 0.5 #0.2
+      xy_goal_tolerance: 0.25
+      trans_stopped_velocity: 0.25
+      short_circuit_trajectory_evaluation: True
+      stateful: True
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      BaseObstacle.scale: 0.02
+      PathAlign.scale: 100.0 #32.0
+      PathAlign.forward_point_distance: 0.1
+      GoalAlign.scale: 24.0
+      GoalAlign.forward_point_distance: 0.1
+      PathDist.scale: 32.0 #100.0 #32.0
+      GoalDist.scale: 24.0
+      RotateToGoal.scale: 32.0
+      RotateToGoal.slowing_factor: 5.0
+      RotateToGoal.lookahead_time: -1.0
+
+      # use_collision_detection: false
 
 local_costmap:
   local_costmap:
