@@ -36,36 +36,26 @@ from launch.actions import TimerAction
 def generate_launch_description():
     # Get the launch directory
     package_dir = get_package_share_directory('tb3_sim')
-    bringup_dir = get_package_share_directory('nav2_bringup')
     launch_dir = os.path.join(package_dir, 'launch')
 
     # Names and poses of the robots
-    # robots = [
-    #     {'name': 'robot1', 'x_pose': 0.0, 'y_pose': 0.5, 'z_pose': 0.01,
-    #                        'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0},
-    #     {'name': 'robot2', 'x_pose': 0.0, 'y_pose': -0.5, 'z_pose': 0.01,
-    #                        'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0}]
-    
     robots = [
         {'name': 'robot1', 'x_pose': 4.0, 'y_pose': -10.0, 'z_pose': 0.01,
                            'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0},
         {'name': 'robot2', 'x_pose': -2.0, 'y_pose': -10.0, 'z_pose': 0.01,
-                           'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0}]
+                           'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0}
+        ]
 
-    # Simulation settings
+    # # Simulation settings
     world = LaunchConfiguration('world')
     simulator = LaunchConfiguration('simulator')
-
-    autostart = LaunchConfiguration('autostart')
     rviz_config_file = LaunchConfiguration('rviz_config')
-    use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
-    use_rviz = LaunchConfiguration('use_rviz')
-    log_settings = LaunchConfiguration('log_settings', default='true')
+    log_settings = LaunchConfiguration('log_settings', default='True')
 
-    # Declare the launch arguments
+    # # Declare the launch arguments
     declare_world_cmd = DeclareLaunchArgument(
         'world',
-        # default_value=os.path.join(bringup_dir, 'worlds', 'world_only.model'),
+        # default_value=os.path.join(package_dir, 'urdf', 'world_only.model'),
         #default_value=os.path.join(package_dir, 'worlds', 'map2.world'),
         default_value=os.path.join(package_dir, 'worlds', 'willow_garage_closed.world'),
         # default_value=os.path.join(package_dir, 'worlds', 'willow_garage.world'),
@@ -76,24 +66,10 @@ def generate_launch_description():
         default_value='gazebo',
         description='The simulator to use (gazebo or gzserver)')
 
-    declare_autostart_cmd = DeclareLaunchArgument(
-        'autostart', default_value='false',
-        description='Automatically startup the stacks')
-
     declare_rviz_config_file_cmd = DeclareLaunchArgument(
         'rviz_config',
         default_value=os.path.join(package_dir, 'rviz', 'namespaced_view.rviz'),
         description='Full path to the RVIZ config file to use.')
-
-    declare_use_robot_state_pub_cmd = DeclareLaunchArgument(
-        'use_robot_state_pub',
-        default_value='True',
-        description='Whether to start the robot state publisher')
-
-    declare_use_rviz_cmd = DeclareLaunchArgument(
-        'use_rviz',
-        default_value='True',
-        description='Whether to start RVIZ')
 
     # Start Gazebo with plugin providing the robot spawning service
     start_gazebo_cmd = ExecuteProcess(
@@ -104,17 +80,7 @@ def generate_launch_description():
     # Define commands for launching the navigation instances
     nav_instances_cmds = []
     for robot in robots:
-
-        group = GroupAction([
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                        os.path.join(bringup_dir, 'launch', 'rviz_launch.py')),
-                condition=IfCondition(use_rviz),
-                launch_arguments={
-                                  'namespace': TextSubstitution(text=robot['name']),
-                                  'use_namespace': 'True',
-                                  'rviz_config': rviz_config_file}.items()),
-
+        nav_instances_cmds.append(GroupAction([
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(os.path.join(package_dir,
                                                            'launch',
@@ -122,11 +88,8 @@ def generate_launch_description():
                 launch_arguments={'namespace': robot['name'],
                                   'use_namespace': 'True',
                                   'use_sim_time': 'True',
-                                  'autostart': autostart,
-                                  'use_rviz': 'False',
+                                  'rviz_config_file': os.path.join(package_dir, 'rviz', 'namespaced_view.rviz'),
                                   'use_simulator': 'False',
-                                  'headless': 'False',
-                                  'use_robot_state_pub': use_robot_state_pub,
                                   'x_pose': TextSubstitution(text=str(robot['x_pose'])),
                                   'y_pose': TextSubstitution(text=str(robot['y_pose'])),
                                   'z_pose': TextSubstitution(text=str(robot['z_pose'])),
@@ -135,30 +98,13 @@ def generate_launch_description():
                                   'yaw': TextSubstitution(text=str(robot['yaw'])),
                                   'robot_name':TextSubstitution(text=robot['name']), }.items()),
 
-            # IncludeLaunchDescription(
-            #     PythonLaunchDescriptionSource(os.path.join(package_dir,
-            #                                                'launch',
-            #                                                'navigation.launch.py')),
-            #     launch_arguments={'namespace': robot['name'],
-            #                       'use_namespace': 'True',
-            #                       'use_sim_time': 'True',
-            #                       }.items()),
-
             LogInfo(
                 condition=IfCondition(log_settings),
                 msg=['Launching ', robot['name']]),
             LogInfo(
                 condition=IfCondition(log_settings),
                 msg=[robot['name'], ' rviz config file: ', rviz_config_file]),
-            LogInfo(
-                condition=IfCondition(log_settings),
-                msg=[robot['name'], ' using robot state pub: ', use_robot_state_pub]),
-            LogInfo(
-                condition=IfCondition(log_settings),
-                msg=[robot['name'], ' autostart: ', autostart])
-        ])
-
-        nav_instances_cmds.append(group)
+        ], scoped=False))
 
     # Create the launch description and populate
     ld = LaunchDescription()
