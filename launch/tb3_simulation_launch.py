@@ -28,7 +28,6 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the launch directory
-    bringup_dir = get_package_share_directory('nav2_bringup')
     package_dir = get_package_share_directory('tb3_sim')
     launch_dir = os.path.join(package_dir, 'launch')
 
