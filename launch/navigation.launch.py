@@ -19,12 +19,27 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, SetEnvironmentVariable
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import LaunchConfiguration, PythonExpression, TextSubstitution
 from launch_ros.actions import LoadComposableNodes
 from launch_ros.actions import Node
 from launch_ros.descriptions import ComposableNode
 from nav2_common.launch import RewrittenYaml
+import launch
+from typing import Text
 
+class NamespacedTopic(launch.Substitution):
+    def __init__(self, 
+                 topic: str, 
+                 namespace: launch.SomeSubstitutionsType) -> None:
+        self.topic = topic
+        self.namespace = namespace
+        super().__init__()
+    def perform(self, context: launch.LaunchContext) -> Text:
+        namespace = self.namespace.perform(context)
+        if (namespace == ""):
+            return self.topic
+        else:
+            return '/' + namespace + self.topic
 
 def generate_launch_description():
     # Get the launch directory
@@ -56,7 +71,7 @@ def generate_launch_description():
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static'),
                   ('/odom', 'odom'),
-                  ('/scan', ['/', namespace, '/scan'])
+                  ('/scan', NamespacedTopic('/scan', namespace))
                   ]
 
     # Create our own temporary YAML files that include substitutions
