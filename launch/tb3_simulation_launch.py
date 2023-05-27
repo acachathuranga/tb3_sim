@@ -19,7 +19,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, TimerAction
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression
@@ -203,7 +203,10 @@ def generate_launch_description():
                             'use_sim_time': use_sim_time,
                             # 'use_composition': 'True',
                             }.items())
-
+    # Sequenced Launch Actions
+    rviz_bringup_cmd = TimerAction(period=1.0, actions=[rviz_cmd])
+    navigation_bringup_cmd = TimerAction(period=1.0, actions=[start_navigation_cmd])
+    
     # Create the launch description and populate
     ld = LaunchDescription()
 
