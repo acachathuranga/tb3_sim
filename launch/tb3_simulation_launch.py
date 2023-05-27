@@ -116,11 +116,7 @@ def generate_launch_description():
 
     declare_world_cmd = DeclareLaunchArgument(
         'world',
-        # TODO(orduno) Switch back once ROS argument passing has been fixed upstream
-        #              https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/91
-        # default_value=os.path.join(get_package_share_directory('turtlebot3_gazebo'),
-        # worlds/turtlebot3_worlds/waffle.model')
-        default_value=os.path.join(bringup_dir, 'worlds', 'world_only.model'),
+        default_value=os.path.join(package_dir, 'urdf', 'world_only.model'),
         description='Full path to world model file to load')
 
     declare_robot_name_cmd = DeclareLaunchArgument(
@@ -236,6 +232,9 @@ def generate_launch_description():
     ld.add_action(rviz_cmd)
     # ld.add_action(bringup_cmd)
     ld.add_action(start_mapping_cmd)
-    # ld.add_action(start_navigation_cmd)
+    
+    # ld.add_action(bringup_cmd)
+    
+    
 
     return ld
