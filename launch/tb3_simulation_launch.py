@@ -212,17 +212,19 @@ def generate_launch_description():
 
     # Declare the launch options
     ld.add_action(declare_namespace_cmd)
-    ld.add_action(declare_use_namespace_cmd)
-    ld.add_action(declare_use_sim_time_cmd)
-
-    ld.add_action(declare_rviz_config_file_cmd)
-    ld.add_action(declare_use_simulator_cmd)
-    ld.add_action(declare_use_robot_state_pub_cmd)
-    ld.add_action(declare_use_rviz_cmd)
-    ld.add_action(declare_simulator_cmd)
-    ld.add_action(declare_world_cmd)
     ld.add_action(declare_robot_name_cmd)
     ld.add_action(declare_robot_sdf_cmd)
+    
+    ld.add_action(declare_use_simulator_cmd)
+    ld.add_action(declare_simulator_cmd)
+    ld.add_action(declare_world_cmd)
+    
+    ld.add_action(declare_use_robot_state_pub_cmd)
+    ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_use_namespace_cmd)
+    ld.add_action(declare_rviz_config_file_cmd)
+    
+    ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_use_respawn_cmd)
 
     # Add any conditioned actions
@@ -232,9 +234,9 @@ def generate_launch_description():
 
     # Add the actions to launch all of the navigation nodes
     ld.add_action(start_robot_state_publisher_cmd)
-    ld.add_action(rviz_cmd)
-    # ld.add_action(bringup_cmd)
+    ld.add_action(rviz_bringup_cmd)
     ld.add_action(start_mapping_cmd)
+    ld.add_action(navigation_bringup_cmd)
     
     # ld.add_action(bringup_cmd)
     
