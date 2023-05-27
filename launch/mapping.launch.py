@@ -16,8 +16,7 @@ def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
 
     # Topic remappings
-    remappings = [  #('/localized_scan', '/localized_scan_local'),
-                    ('/tf', 'tf'), 
+    remappings = [  ('/tf', 'tf'), 
                     ('/tf_static', 'tf_static'),
                     ('/map_metadata', 'map_metadata'),
                     ('slam_toolbox/graph_visualization', 'slam_toolbox/graph_visualization_'),
@@ -37,7 +36,7 @@ def generate_launch_description():
 
     declare_robot_name_argument = DeclareLaunchArgument(
         'namespace',
-        default_value='robot1',
+        default_value='',
         description='Robot Name / Namespace')
 
     start_async_slam_toolbox_node = Node(
@@ -66,20 +65,11 @@ def generate_launch_description():
         # prefix=['xterm -e gdb -ex run --args']
         )
     
-    start_map_transform_publisher_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(
-            get_package_share_directory('map_transform_publisher'), 'launch', 'map_transform_publisher.launch.py')),
-        launch_arguments={
-                            'robot_name': namespace,
-                            'simulation': use_sim_time
-                            }.items())
- 
     ld = LaunchDescription()
     ld.add_action(declare_robot_name_argument)
     ld.add_action(declare_use_sim_time_argument)
     
     ld.add_action(start_async_slam_toolbox_node)
     ld.add_action(start_async_slam_toolbox_merger_node)
-    # ld.add_action(start_map_transform_publisher_node)
 
     return ld
