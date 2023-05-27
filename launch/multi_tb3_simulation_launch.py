@@ -112,15 +112,15 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(declare_simulator_cmd)
     ld.add_action(declare_world_cmd)
-    ld.add_action(declare_use_rviz_cmd)
-    ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
-    ld.add_action(declare_use_robot_state_pub_cmd)
 
     # Add the actions to start gazebo, robots and simulations
     ld.add_action(start_gazebo_cmd)
 
-    for simulation_instance_cmd in nav_instances_cmds:
-        ld.add_action(simulation_instance_cmd)
+    start_delay = 0.0
+    for nav_instance in nav_instances_cmds:
+        # Added delay between nav stack launching due to life_cycle manager transition freezing issue
+        ld.add_action(TimerAction(period=start_delay, actions=[nav_instance]))
+        start_delay += 5.0
 
     return ld
