@@ -18,16 +18,7 @@ def generate_launch_description():
     # Topic remappings
     remappings = [  ('/tf', 'tf'), 
                     ('/tf_static', 'tf_static'),
-                    ('/map_metadata', 'map_metadata'),
-                    ('slam_toolbox/graph_visualization', 'slam_toolbox/graph_visualization_'),
-                    ('/slam_toolbox/scan_visualization', 'slam_toolbox/scan_visualization'),
-                    ('/slam_toolbox/clear_changes', 'slam_toolbox/clear_changes'),
-                    ('/slam_toolbox/dynamic_map', 'slam_toolbox/dynamic_map'),
-                    ('/slam_toolbox/manual_loop_closure', 'slam_toolbox/manual_loop_closure'),
-                    ('/slam_toolbox/pause_new_measurements', 'slam_toolbox/pause_new_measurements'),
-                    ('/slam_toolbox/save_map', 'slam_toolbox/save_map'),
-                    ('/slam_toolbox/serialize_map', 'slam_toolbox/serialize_map'),
-                    ('/slam_toolbox/toggle_interactive_mode', 'slam_toolbox/toggle_interactive_mode')]
+                    ('/map_metadata', 'map_metadata')]
 
     declare_use_sim_time_argument = DeclareLaunchArgument(
         'use_sim_time',
