@@ -193,7 +193,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(package_dir, 'launch', 'mapping.launch.py')),
         launch_arguments={
                             'namespace': namespace,
-                            # 'use_sim_time': use_sim_time
+                            'use_sim_time': use_sim_time
                             }.items())
 
     start_navigation_cmd = IncludeLaunchDescription(
