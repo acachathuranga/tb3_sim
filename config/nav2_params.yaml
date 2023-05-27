@@ -104,10 +104,9 @@ controller_server:
       max_angular_accel: 40.0
       simulate_ahead_time: 1.0
 
-   # # DWB parameters
-    # FollowPath:
-    #   plugin: "dwb_core::DWBLocalPlanner"
-
+   # DWB parameters
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
       debug_trajectory_details: True
       min_vel_x: 0.0 #0.0
       min_vel_y: 0.0
